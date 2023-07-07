@@ -1,0 +1,29 @@
+spring:
+  profiles:
+    active: dev
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+mybatis:
+  mapper-locations: classpath*:mapper/*.xml
+
+logging:
+  config: classpath:logback-spring.xml
+  level:
+    root: info
+    org.springframework.security: TRACE
+
+templates:
+  file:
+    path: templates
+
+jodconverter:
+  local:
+    enabled: true
+    office-home: /usr/lib/libreoffice
+    #office-home: C:\/Program Files\/LibreOffice
+    # 开启多个LibreOffice进程，每个端口对应一个进程
+    portNumbers: 9080,9081
+    maxTasksPerProcess: 100

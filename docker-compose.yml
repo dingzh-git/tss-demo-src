@@ -1,0 +1,46 @@
+version: "3.9"
+services:
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_PASSWORD: admin
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: dongbang
+      TZ: Asia/Tokyo
+    container_name: tss-demo-db
+    volumes:
+      - ./tss-demo-db/mysql/mysql-data/:/docker-entrypoint-initdb.d/
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    ports:
+      - 3306:3306
+
+  tss-demo-api:
+    build:
+      context: ./tss-demo-api
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/dongbang
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: admin
+    depends_on:
+      - db
+    command: [ "bash", "start.sh" ]
+    container_name: tss-demo-api
+    ports:
+      - 8001:8080
+    volumes:
+      - ./tss-demo-api:/usr/src/app
+    working_dir: /usr/src/app
+    tty: true
+
+  tss-demo-react:
+    build:
+      context: ./tss-demo-react
+    command: [ "yarn", "start" ]
+    container_name: tss-demo-react
+    depends_on:
+      - tss-demo-api
+    ports:
+      - 3000:3000
+    volumes:
+      - ./tss-demo-react:/usr/src/app
+
