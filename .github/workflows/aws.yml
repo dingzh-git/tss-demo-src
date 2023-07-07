@@ -37,7 +37,11 @@ env:
   ECS_CLUSTER: tss_ecs_cluster                 # set this to your Amazon ECS cluster name
   ECS_TASK_DEFINITION: .aws/task-definition.json # set this to the path to your Amazon ECS task definition
                                                # file, e.g. .aws/task-definition.json
-  CONTAINER_NAME: tss_container           # set this to the name of the container in the
+  CONTAINER_NAME_DB: tss_demo_db               # set this to the name of the container in the
+                                               # containerDefinitions section of your task definition
+  CONTAINER_NAME_API: tss_demo_api             # set this to the name of the container in the
+                                               # containerDefinitions section of your task definition
+  CONTAINER_NAME_REACT: tss_demo_react         # set this to the name of the container in the
                                                # containerDefinitions section of your task definition
 
 permissions:
@@ -87,19 +91,23 @@ jobs:
         # docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         docker compose -f  ${{ env.COMPOSE_FILE }}  up -d
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:tss-demo-db
-        echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:tss-demo-db" >> $GITHUB_OUTPUT
+        echo "image_db=$ECR_REGISTRY/$ECR_REPOSITORY:tss-demo-db" >> $GITHUB_OUTPUT
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:tss-demo-api
-        echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:tss-demo-api" >> $GITHUB_OUTPUT
+        echo "image_api=$ECR_REGISTRY/$ECR_REPOSITORY:tss-demo-api" >> $GITHUB_OUTPUT
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:tss-demo-react
-        echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:tss-demo-react" >> $GITHUB_OUTPUT
+        echo "image_react=$ECR_REGISTRY/$ECR_REPOSITORY:tss-demo-react" >> $GITHUB_OUTPUT
 
     - name: Fill in the new image ID in the Amazon ECS task definition
       id: task-def
       uses: aws-actions/amazon-ecs-render-task-definition@v1
       with:
         task-definition: ${{ env.ECS_TASK_DEFINITION }}
-        # container-name: ${{ env.CONTAINER_NAME }}
-        # image: ${{ steps.build-image.outputs.image }}
+        container-name-db: ${{ env.CONTAINER_NAME_DB }}
+        image-db: ${{ steps.build-image.outputs.image_db }}
+        container-name-api: ${{ env.CONTAINER_NAME_API }}
+        image-api: ${{ steps.build-image.outputs.image_api }}
+        container-name-react: ${{ env.CONTAINER_NAME_REACT }}
+        image-react: ${{ steps.build-image.outputs.image_react }}
 
     - name: Deploy Amazon ECS task definition
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
