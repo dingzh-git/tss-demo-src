@@ -86,8 +86,12 @@ jobs:
         # be deployed to ECS.
         # docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         docker compose -f  ${{ env.COMPOSE_FILE }}  up -d
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-        echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:tss-demo-db
+        echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:tss-demo-db" >> $GITHUB_OUTPUT
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:tss-demo-api
+        echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:tss-demo-api" >> $GITHUB_OUTPUT
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:tss-demo-react
+        echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:tss-demo-react" >> $GITHUB_OUTPUT
 
     - name: Fill in the new image ID in the Amazon ECS task definition
       id: task-def
