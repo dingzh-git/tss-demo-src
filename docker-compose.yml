@@ -1,7 +1,9 @@
 version: "3.9"
 services:
   db:
-    image: mysql:8.0
+    build:
+      context: ./tss-demo-db
+    image: $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
     environment:
       MYSQL_PASSWORD: admin
       MYSQL_ROOT_PASSWORD: admin
@@ -17,6 +19,7 @@ services:
   tss-demo-api:
     build:
       context: ./tss-demo-api
+    image: $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/dongbang
       SPRING_DATASOURCE_USERNAME: root
@@ -35,6 +38,7 @@ services:
   tss-demo-react:
     build:
       context: ./tss-demo-react
+    image: $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
     command: [ "yarn", "start" ]
     container_name: tss-demo-react
     depends_on:
