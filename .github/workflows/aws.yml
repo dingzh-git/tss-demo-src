@@ -98,16 +98,28 @@ jobs:
         echo "image_react=$ECR_REGISTRY/$ECR_REPOSITORY:tss-demo-react" >> $GITHUB_OUTPUT
 
     - name: Fill in the new image ID in the Amazon ECS task definition
-      id: task-def
+      id: task-def-db
       uses: aws-actions/amazon-ecs-render-task-definition@v1
       with:
         task-definition: ${{ env.ECS_TASK_DEFINITION }}
-        container-name-db: ${{ env.CONTAINER_NAME_DB }}
-        image-db: ${{ steps.build-image.outputs.image_db }}
-        container-name-api: ${{ env.CONTAINER_NAME_API }}
-        image-api: ${{ steps.build-image.outputs.image_api }}
-        container-name-react: ${{ env.CONTAINER_NAME_REACT }}
-        image-react: ${{ steps.build-image.outputs.image_react }}
+        container-name: ${{ env.CONTAINER_NAME_DB }}
+        image: ${{ steps.build-image.outputs.image_db }}
+
+    - name: Fill in the new image ID in the Amazon ECS task definition
+      id: task-def-api
+      uses: aws-actions/amazon-ecs-render-task-definition@v1
+      with:
+        task-definition: ${{ env.ECS_TASK_DEFINITION }}
+        container-name: ${{ env.CONTAINER_NAME_API }}
+        image: ${{ steps.build-image.outputs.image_api }}
+
+    - name: Fill in the new image ID in the Amazon ECS task definition
+      id: task-def-react
+      uses: aws-actions/amazon-ecs-render-task-definition@v1
+      with:
+        task-definition: ${{ env.ECS_TASK_DEFINITION }}
+        container-name: ${{ env.CONTAINER_NAME_REACT }}
+        image: ${{ steps.build-image.outputs.image_react }}
 
     - name: Deploy Amazon ECS task definition
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
