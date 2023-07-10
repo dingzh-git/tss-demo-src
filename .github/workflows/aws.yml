@@ -103,11 +103,11 @@ jobs:
       with:
         task-definition: ${{ env.ECS_TASK_DEFINITION }}
         container-name-db: ${{ env.CONTAINER_NAME_DB }}
-        image-db: ${{ steps.build-image-1.outputs.image }}
+        image-db: ${{ steps.build-image.outputs.image_db }}
         container-name-api: ${{ env.CONTAINER_NAME_API }}
-        image-api: ${{ steps.build-image-2.outputs.image }}
+        image-api: ${{ steps.build-image.outputs.image_api }}
         container-name-react: ${{ env.CONTAINER_NAME_REACT }}
-        image-react: ${{ steps.build-image-3.outputs.image }}
+        image-react: ${{ steps.build-image.outputs.image_react }}
 
     - name: Deploy Amazon ECS task definition
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
