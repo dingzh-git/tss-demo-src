@@ -101,7 +101,7 @@ jobs:
       id: task-def-db
       uses: aws-actions/amazon-ecs-render-task-definition@v1
       with:
-        task-definition: ${{ env.ECS_TASK_DEFINITION }}
+        task-definition: ${{ env.ECS_TASK_DEFINITION }}/${{ env.CONTAINER_NAME_DB }}
         container-name: ${{ env.CONTAINER_NAME_DB }}
         image: ${{ steps.build-image.outputs.image_db }}
 
@@ -109,7 +109,7 @@ jobs:
       id: task-def-api
       uses: aws-actions/amazon-ecs-render-task-definition@v1
       with:
-        task-definition: ${{ env.ECS_TASK_DEFINITION }}
+        task-definition: ${{ env.ECS_TASK_DEFINITION }}/${{ env.CONTAINER_NAME_API }}
         container-name: ${{ env.CONTAINER_NAME_API }}
         image: ${{ steps.build-image.outputs.image_api }}
 
@@ -117,7 +117,7 @@ jobs:
       id: task-def-react
       uses: aws-actions/amazon-ecs-render-task-definition@v1
       with:
-        task-definition: ${{ env.ECS_TASK_DEFINITION }}
+        task-definition: ${{ env.ECS_TASK_DEFINITION }}/${{ env.CONTAINER_NAME_REACT }}
         container-name: ${{ env.CONTAINER_NAME_REACT }}
         image: ${{ steps.build-image.outputs.image_react }}
 
